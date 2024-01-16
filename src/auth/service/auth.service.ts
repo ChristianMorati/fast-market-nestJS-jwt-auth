@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -12,7 +12,6 @@ import { jwtConstants } from '../constants';
 @Injectable()
 export class AuthService {
     private readonly key: string = process.env.ENCRYPTION_KEY;
-    private readonly jwt = require('jsonwebtoken');
 
     constructor(
         private jwtService: JwtService,
@@ -92,18 +91,19 @@ export class AuthService {
     }
 
     async genRefreshToken(payload: Object): Promise<string> {
-        const accessToken = await this.jwtService.signAsync(payload, {
+        const refreshToken = await this.jwtService.signAsync(payload, {
+            expiresIn: jwtConstants.rtExpiresIn,
             secret: jwtConstants.secret,
-            expiresIn: jwtConstants.rtExpiresIn
         });
-        return accessToken;
+        return refreshToken;
     }
 
     async genAccessToken(payload: Object): Promise<string> {
-        return await this.jwtService.signAsync(payload, {
+        const refreshToken = await this.jwtService.signAsync(payload, {
+            expiresIn: jwtConstants.expiresIn,
             secret: jwtConstants.secret,
-            expiresIn: jwtConstants.expiresIn
         });
+        return refreshToken;
     }
 
     private extractTokenFromHeader(request: any): string | undefined {
@@ -112,14 +112,16 @@ export class AuthService {
     }
 
     async validateRefreshToken(token: any) {
-        console.error(token);
-        try {
-            const decoded = this.jwt.verify(token, jwtConstants.secret);
-            console.log('Assinatura válida:', decoded);
-        } catch (error) {
-            console.error('Erro ao verificar a assinatura:', error.message);
-            throw new UnauthorizedException();
-        }
+        console.clear();
+
+        // try {
+        //     const decoded = this.jwt.verify(token, jwtConstants.secret);
+        //     console.log('Assinatura válida:', decoded);
+
+        // } catch (error) {
+        //     console.error('Assinatura inválida:', error.message);
+        //     // throw new UnauthorizedException();
+        // }
 
         var payload = await this.jwtService.decode(token);
         var user_id = payload.sub;

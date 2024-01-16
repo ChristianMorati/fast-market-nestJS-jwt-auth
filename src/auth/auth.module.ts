@@ -13,13 +13,18 @@ import { TokensRepository } from 'src/repositories/tokens.repository';
 import { AuthGuard } from './guard/auth-guard';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-
+import { jwtConstants } from './constants';
 
 @Module({
     imports: [
         ConfigModule.forRoot(),
         TypeOrmModule.forFeature([User, Token]),
         UsersModule,
+        JwtModule.register({
+            global: true,
+            secret: jwtConstants.secret,
+            signOptions: { expiresIn: '60s' },
+        }),
     ],
     providers: [
 
