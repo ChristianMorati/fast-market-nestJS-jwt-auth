@@ -1,4 +1,5 @@
-import { Body, Controller, Post, Put, Req, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Put, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthDto } from '../dto/auth.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -14,10 +15,10 @@ export class AuthController {
     ) { }
 
     @Public()
-    @Post('login')
-    singin(@Body() authDto: AuthDto) {
-        const AT = this.authService.login(
-            authDto.email,
+    @Post('signin')
+    signIn(@Body() authDto: AuthDto) {
+        const AT = this.authService.signin(
+            authDto.username,
             authDto.password
         )
         return AT;
@@ -31,7 +32,7 @@ export class AuthController {
 
     @Public()
     @Put('refresh')
-    async refresh(@Body() body: any) {
+    async refresh(@Body() body: any, @Res() res: Response) {
         var newAcessToken;
         console.error(body.token)
         try {
@@ -39,6 +40,6 @@ export class AuthController {
         } catch (e) {
             throw new UnauthorizedException();
         }
-        return newAcessToken;
+        res.status(HttpStatus.CREATED).json(newAcessToken).send();
     }
 }

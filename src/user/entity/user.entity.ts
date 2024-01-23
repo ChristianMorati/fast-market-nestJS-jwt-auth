@@ -14,5 +14,5 @@ export class User extends BaseEntity {
     password: string
 
     @Column({ unique: true, nullable: true })
-    cpf!: string
+    cpf: string
 }

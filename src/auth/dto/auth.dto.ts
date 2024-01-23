@@ -6,7 +6,7 @@ export class AT {
     sub: number
 
     @IsEmail()
-    email: string
+    username: string
 
     @IsNumber()
     iat: number
@@ -17,7 +17,7 @@ export class AT {
 
 export class AuthDto {
     @IsEmail()
-    email: string
+    username: string
 
     @IsString()
     @MinLength(8)

@@ -1,12 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
-import * as crypto from 'crypto-js';
 import { UsersRepository } from 'src/repositories/users.repository';
 import { TokensRepository } from 'src/repositories/tokens.repository';
 import { Token } from '../entity/token.entity';
 import { jwtConstants } from '../constants';
+import * as crypto from 'crypto-js';
+import * as bcrypt from 'bcrypt';
+import { User } from 'src/user/entity/user.entity';
+
 
 
 @Injectable()
@@ -19,8 +21,11 @@ export class AuthService {
         private tokensRepository: TokensRepository,
     ) { }
 
-    async login(username: string, password: string): Promise<Object> {
+    async signin(username: string, password: string): Promise<Object> {
         const user = await this.usersRepository.findOneByUsername(username);
+
+        console.error(user);
+        return user;
 
         if (!user || !await this.compareHashPassword(password, user.password)) {
             throw new UnauthorizedException();
@@ -32,7 +37,6 @@ export class AuthService {
 
         await this.tokensRepository.updateTokens(
             user.id,
-            accessToken,
             refreshToken
         )
 
@@ -64,7 +68,8 @@ export class AuthService {
     async signUp(createUserDto: CreateUserDto) {
 
         createUserDto.password = await this.hashPassword(createUserDto.password);
-        createUserDto.cpf = this.encryptToken(createUserDto.cpf);
+
+        if (createUserDto.cpf) createUserDto.cpf = this.encryptToken(createUserDto.cpf);
 
         let createdUser: any = await this.usersRepository.save(createUserDto);
 
@@ -80,7 +85,6 @@ export class AuthService {
 
         const setTokens: Token = {
             user_id: createdUser.id,
-            access_token: accessToken,
             refresh_token: refreshToken
         }
 
@@ -111,20 +115,22 @@ export class AuthService {
         return type === 'Bearer' ? token : undefined;
     }
 
-    async validateRefreshToken(token: any) {
+    async validateRefreshToken(accessToken: string) {
         console.clear();
 
-        // try {
-        //     const decoded = this.jwt.verify(token, jwtConstants.secret);
-        //     console.log('Assinatura válida:', decoded);
-
-        // } catch (error) {
-        //     console.error('Assinatura inválida:', error.message);
-        //     // throw new UnauthorizedException();
-        // }
-
-        var payload = await this.jwtService.decode(token);
+        var payload = await this.jwtService.decode(accessToken);
         var user_id = payload.sub;
+
+        try {
+            // very accessToken integrity
+            await this.jwtService.verifyAsync(accessToken, {
+                secret: jwtConstants.secret,
+                ignoreExpiration: true
+            });
+        } catch (error) {
+            console.error('invalid AT');
+            throw new UnauthorizedException();
+        }
 
         try {
             const userTokens = await this.tokensRepository.findOne(user_id);
@@ -136,7 +142,7 @@ export class AuthService {
             const accessToken = await this.genAccessToken(newPayload);
             const refreshToken = await this.genRefreshToken(newPayload);
 
-            await this.tokensRepository.updateTokens(user_id, accessToken, refreshToken);
+            await this.tokensRepository.updateTokens(user_id, refreshToken);
             return { access_token: accessToken };
         } catch (e) {
             console.error('RT expired');

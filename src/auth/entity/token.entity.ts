@@ -7,8 +7,5 @@ export class Token extends BaseEntity {
   user_id: number;
 
   @Column('text')
-  access_token: string;
-
-  @Column('text')
   refresh_token: string;
 }

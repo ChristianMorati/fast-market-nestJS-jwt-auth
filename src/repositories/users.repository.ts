@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Connection } from 'mysql2/typings/mysql/lib/Connection';
 import { User } from 'src/user/entity/user.entity';
 import { Repository } from 'typeorm';
 
@@ -24,7 +25,7 @@ export class UsersRepository {
     }
 
     findOneByUsername(username: string): Promise<User | null> {
-        return this.usersRepository.findOneBy({ username });
+        return this.usersRepository.findOneBy({ username: username });
     }
 
     async remove(id: number): Promise<void> {

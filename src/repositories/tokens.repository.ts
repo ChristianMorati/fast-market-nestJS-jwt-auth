@@ -19,13 +19,12 @@ export class TokensRepository {
         return await this.tokensRepository.findOneBy({ user_id });
     }
 
-    async updateTokens(user_id: number, access_token: string, refresh_token: string) {
+    async updateTokens(user_id:number, refresh_token: string) {
 
         try {
             const user_tokens = await this.tokensRepository.findOneBy({ user_id });
 
             if (user_tokens) {
-                user_tokens.access_token = access_token;
                 user_tokens.refresh_token = refresh_token;
 
                 await this.tokensRepository.save(user_tokens);
