@@ -7,8 +7,6 @@ import { Token } from '../entity/token.entity';
 import { jwtConstants } from '../constants';
 import * as crypto from 'crypto-js';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/user/entity/user.entity';
-
 
 
 @Injectable()
@@ -23,9 +21,6 @@ export class AuthService {
 
     async signin(username: string, password: string): Promise<Object> {
         const user = await this.usersRepository.findOneByUsername(username);
-
-        console.error(user);
-        return user;
 
         if (!user || !await this.compareHashPassword(password, user.password)) {
             throw new UnauthorizedException();
