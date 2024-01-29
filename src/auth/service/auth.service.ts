@@ -19,10 +19,10 @@ export class AuthService {
         private tokensRepository: TokensRepository,
     ) { }
 
-    async signin(username: string, password: string): Promise<Object> {
+    async signin(username: string, userPassword: string): Promise<Object> {
         const user = await this.usersRepository.findOneByUsername(username);
 
-        if (!user || !await this.compareHashPassword(password, user.password)) {
+        if (!user || !await this.compareHashPassword(userPassword, user.password)) {
             throw new UnauthorizedException();
         }
 
@@ -35,7 +35,11 @@ export class AuthService {
             refreshToken
         )
 
-        return { access_token: accessToken };
+        const unHashdCpf = this.decryptToken(user.cpf);
+        user.cpf = unHashdCpf;
+
+        const { password, ...signedUser } = user;
+        return { ...signedUser, access_token: accessToken };
     }
 
     private encryptToken(token: string) {
@@ -83,7 +87,10 @@ export class AuthService {
             refresh_token: refreshToken
         }
 
-        const { password, cpf, ...user } = createdUser;
+        const unHashdCpf = this.decryptToken(createdUser.cpf);
+        createdUser.cpf = unHashdCpf;
+
+        const { password, ...user } = createdUser;
 
         await this.tokensRepository.save(setTokens);
         return { ...user, access_token: accessToken };
