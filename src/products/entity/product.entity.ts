@@ -6,19 +6,13 @@ import { Column, Entity } from "typeorm";
 export class Product extends BaseEntity {
     @Column({ unique: true })
     code: string
-    
+
     @Column()
     description: string
 
     @Column('text')
     url_img: string
 
-    @Column()
-    unit_price: number
-
-    @Column({ nullable: true })
-    kilogram_price: number
-
-    @Column()
-    units: number
+    @Column({ type: 'float' })
+    unit_price: number;
 }

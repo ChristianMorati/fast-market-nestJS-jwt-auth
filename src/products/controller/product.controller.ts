@@ -1,7 +1,5 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/auth/guard/auth-guard';
 import { Product } from 'src/products/entity/product.entity';
 import { ProductService } from 'src/products/service/product.service';
 

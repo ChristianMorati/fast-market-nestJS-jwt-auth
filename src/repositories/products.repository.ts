@@ -15,6 +15,10 @@ export class ProductsRepository {
         return await this.productsRepository.save(product);
     }
 
+    async remove(id: number): Promise<void> {
+        await this.productsRepository.delete(id);
+    }
+
     findAll(): Promise<Product[]> {
         return this.productsRepository.find();
     }
@@ -25,9 +29,5 @@ export class ProductsRepository {
 
     findOneBycode(code: string): Promise<Product | null> {
         return this.productsRepository.findOneBy({ code });
-    }
-
-    async remove(id: number): Promise<void> {
-        await this.productsRepository.delete(id);
     }
 }

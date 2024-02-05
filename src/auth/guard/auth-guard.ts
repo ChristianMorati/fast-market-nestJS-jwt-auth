@@ -2,8 +2,6 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { SetMetadata } from '@nestjs/common';
-import { TokensRepository } from "src/repositories/tokens.repository";
-import { AuthService } from "../service/auth.service";
 import { jwtConstants } from "../constants";
 
 export const IS_PUBLIC_KEY = 'isPublic';
@@ -12,9 +10,7 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
-    private authService: AuthService,
     private reflector: Reflector,
-    private tokensRepository: TokensRepository,
 
   ) { }
 
