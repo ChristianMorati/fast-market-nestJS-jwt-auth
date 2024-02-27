@@ -10,8 +10,10 @@ import { Token } from './auth/entity/token.entity';
 import { ProductsModule } from './products/products.module';
 import { Product } from './products/entity/product.entity';
 import { PaymentModule } from './payment/payment.module';
+
 import { PurchaseModule } from './purchase/purchase.module';
 import { Purchase } from './purchase/entity/purchase.entity';
+import { PurchaseItem } from './purchase/entity/purchase-items.entity';
 
 
 @Module({
@@ -24,7 +26,7 @@ import { Purchase } from './purchase/entity/purchase.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [User, Token, Product, Purchase],
+      entities: [User, Token, Product, Purchase, PurchaseItem],
       synchronize: true,
     }),
     UsersModule,

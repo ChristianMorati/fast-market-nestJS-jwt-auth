@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-// import { CreateOrderDto } from "src/purchase/dto/create-order.dto";
 import { Purchase } from "src/purchase/entity/purchase.entity";
 import { Repository } from "typeorm";
 
@@ -14,9 +13,9 @@ export class PurchaseRepository {
     async findAll() {
         const purchases = await this.purchaseRepository.find({
             relations: {
-                items: true,
-                user: true
-            }
+                user: true,
+                items: { product: true },
+            }, where: { user: { id: 14 } }
         });
         return purchases;
     }
