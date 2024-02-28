@@ -11,6 +11,10 @@ export class PurchaseService {
         return this.purchaseRepository.findAll();
     }
 
+    lastPurchase(userId: number) {
+        return this.purchaseRepository.lastPurchase(userId);
+    }
+
     // createOrder(order: CreateOrderDto) {
     //     return this.purchaseRepository.createOrder(order);
     // }

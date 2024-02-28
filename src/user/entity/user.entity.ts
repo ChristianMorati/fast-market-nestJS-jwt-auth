@@ -1,5 +1,6 @@
 import { BaseEntity } from "src/base_entity/base.entity";
-import { Column, Entity } from "typeorm";
+import { Purchase } from "src/purchase/entity/purchase.entity";
+import { Column, Entity, JoinTable, OneToMany } from "typeorm";
 
 @Entity()
 export class User extends BaseEntity {
@@ -14,4 +15,8 @@ export class User extends BaseEntity {
 
     @Column({ unique: true, nullable: true })
     cpf: string
+
+    @OneToMany(() => Purchase, purchase => purchase.user)
+    @JoinTable()
+    purchases: Purchase[];
 }

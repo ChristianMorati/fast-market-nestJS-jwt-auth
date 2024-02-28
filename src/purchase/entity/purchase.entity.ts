@@ -1,9 +1,8 @@
 import { IsDate, IsPositive, IsString } from "class-validator";
 import { User } from "src/user/entity/user.entity";
-import { Column, Entity, JoinColumn, JoinTable, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { BaseEntity } from "src/base_entity/base.entity";
 import { PurchaseItem } from "./purchase-items.entity";
-
 
 @Entity()
 export class Purchase extends BaseEntity {
@@ -22,11 +21,10 @@ export class Purchase extends BaseEntity {
     @Column({ default: null })
     updatedAt: Date;
     
-    @OneToOne(() => User)
-    @JoinColumn()
-    user: User
-    
-    @OneToMany(() => PurchaseItem, purchaseItem => purchaseItem.purchase_id)
+    @OneToMany(() => PurchaseItem, purchaseItem => purchaseItem.purchase)
     @JoinTable()
     items: PurchaseItem[];
+
+    @ManyToOne(() => User, user => user.purchases)
+    user: User;
 }

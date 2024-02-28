@@ -13,6 +13,13 @@ export class PurchaseController {
         return this.purchaseService.findAll();
     }
 
+    @Public()
+    @Get('/last/:userId')
+    lastPurchase(@Param() params: any) {
+        const { userId } = params
+        return this.purchaseService.lastPurchase(userId);
+    }
+
     // @Post()
     // createOrder(@Body() order: CreateOrderDto ){
     //     return this.purchaseService.createOrder(order)
