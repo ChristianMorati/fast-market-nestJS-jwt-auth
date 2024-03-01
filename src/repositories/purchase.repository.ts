@@ -23,20 +23,19 @@ export class PurchaseRepository {
     }
 
     async lastPurchase(userId: number) {
-        const purchases: Purchase[] = await this.purchaseRepository.find({
+        const purchase: Purchase = await this.purchaseRepository.findOne({
             relations: {
-                user: true,
                 items: { product: true }
             },
             where: { user: { id: userId } }
         });
 
-        if (purchases.length === 0) {
+        if (!purchase) {
             return {
                 error: 'sem dados para este usuário'
             };
         }
-        return purchases;
+        return purchase;
     }
 
     // createOrder(order: CreateOrderDto) {
