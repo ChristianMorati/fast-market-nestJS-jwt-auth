@@ -82,7 +82,7 @@ export class AuthService {
         const accessToken = await this.genAccessToken(tokeInfo);
         const refreshToken = await this.genRefreshToken(tokeInfo);
 
-        const setTokens: Token = {
+        const setTokens: Partial<Token> = {
             user_id: createdUser.id,
             refresh_token: refreshToken
         }

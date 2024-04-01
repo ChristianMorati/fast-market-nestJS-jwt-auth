@@ -1,9 +1,11 @@
-import { BaseEntity } from "src/base_entity/base.entity";
 import { Purchase } from "src/purchase/entity/purchase.entity";
-import { Column, Entity, JoinTable, OneToMany } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User extends BaseEntity {
+    @PrimaryGeneratedColumn()
+    id: number
+
     @Column()
     name: string
 

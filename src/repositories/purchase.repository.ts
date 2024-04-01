@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Purchase } from "src/purchase/entity/purchase.entity";
-import { User } from "src/user/entity/user.entity";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -11,13 +10,12 @@ export class PurchaseRepository {
         private purchaseRepository: Repository<Purchase>,
     ) { }
 
-    async findAll() {
+    async findAll(userId: number) {
         const purchases = await this.purchaseRepository.find({
             relations: {
-                user: true,
                 items: { product: true }
             },
-            where: { user: { id: 14 } }
+            where: { user: { id: userId } }
         });
         return purchases;
     }
@@ -38,7 +36,11 @@ export class PurchaseRepository {
         return purchase;
     }
 
-    // createOrder(order: CreateOrderDto) {
-    //     return this.purchaseRepository.create(order);
-    // }
+    async save(purchase: any) {
+        return await this.purchaseRepository.save(purchase);
+    }
+
+    createPurchase(order: any) {
+        return this.purchaseRepository.create(order);
+    }
 }
