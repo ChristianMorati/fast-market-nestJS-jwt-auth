@@ -1,20 +1,20 @@
-import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthGuard } from './auth/guard/auth-guard';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common';
+import { PaymentModule } from './payment/payment.module';
+import { Product } from './products/entity/product.entity';
+import { ProductsModule } from './products/products.module';
+import { Purchase } from './purchase/entity/purchase.entity';
+import { PurchaseItem } from './purchase/entity/purchase-items.entity';
+import { PurchaseModule } from './purchase/purchase.module';
+import { Token } from './auth/entity/token.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entity/user.entity';
 import { UsersModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
-import { Token } from './auth/entity/token.entity';
-import { ProductsModule } from './products/products.module';
-import { Product } from './products/entity/product.entity';
-import { PaymentModule } from './payment/payment.module';
-
-import { PurchaseModule } from './purchase/purchase.module';
-import { Purchase } from './purchase/entity/purchase.entity';
-import { PurchaseItem } from './purchase/entity/purchase-items.entity';
-
 
 @Module({
   imports: [
@@ -38,6 +38,10 @@ import { PurchaseItem } from './purchase/entity/purchase-items.entity';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+  },
   ],
 })
 export class AppModule { }

@@ -34,7 +34,6 @@ export class AuthController {
     @Put('refresh')
     async refresh(@Body() body: any, @Res() res: Response) {
         var newAcessToken;
-        console.error(body.token)
         try {
             newAcessToken = await this.authService.validateRefreshToken(body.token);
         } catch (e) {

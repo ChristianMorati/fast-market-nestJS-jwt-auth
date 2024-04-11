@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection } from 'mysql2/typings/mysql/lib/Connection';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/entity/user.entity';
 import { Repository } from 'typeorm';
 
@@ -12,7 +12,7 @@ export class UsersRepository {
         private usersRepository: Repository<User>,
     ) { }
 
-    save(user: any): Promise<User | undefined> {
+    save(user: CreateUserDto): Promise<User | undefined> {
         return this.usersRepository.save(user);
     }
 
@@ -24,8 +24,9 @@ export class UsersRepository {
         return this.usersRepository.findOneBy({ id });
     }
 
-    findOneByUsername(username: string): Promise<User | null> {
-        return this.usersRepository.findOneBy({ username: username });
+    findOneByUsername(username: string): Promise<User | undefined> {
+        const user = this.usersRepository.findOneBy({ username });
+        return user;
     }
 
     async remove(id: number): Promise<void> {

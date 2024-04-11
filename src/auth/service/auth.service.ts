@@ -1,13 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UsersRepository } from 'src/repositories/users.repository';
-import { TokensRepository } from 'src/repositories/tokens.repository';
-import { Token } from '../entity/token.entity';
-import { jwtConstants } from '../constants';
-import * as crypto from 'crypto-js';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto-js';
 
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { JwtService } from '@nestjs/jwt';
+import { Token } from '../entity/token.entity';
+import { TokensRepository } from 'src/repositories/tokens.repository';
+import { User } from 'src/user/entity/user.entity';
+import { UsersRepository } from 'src/repositories/users.repository';
+import { jwtConstants } from '../constants';
 
 @Injectable()
 export class AuthService {
@@ -70,9 +72,9 @@ export class AuthService {
 
         if (createUserDto.cpf) createUserDto.cpf = this.encryptToken(createUserDto.cpf);
 
-        let createdUser: any = await this.usersRepository.save(createUserDto);
+        let createdUser: User = await this.usersRepository.save(createUserDto);
 
-        if (!createdUser) { throw Error('db is dead'); }
+        if (!createdUser) { throw Error('Error to save user'); }
 
         const tokeInfo = {
             sub: createdUser.id,
@@ -87,8 +89,8 @@ export class AuthService {
             refresh_token: refreshToken
         }
 
-        const unHashdCpf = this.decryptToken(createdUser.cpf);
-        createdUser.cpf = unHashdCpf;
+        const unHashedCpf = this.decryptToken(createdUser.cpf);
+        createdUser.cpf = unHashedCpf;
 
         const { password, ...user } = createdUser;
 
@@ -112,14 +114,7 @@ export class AuthService {
         return refreshToken;
     }
 
-    private extractTokenFromHeader(request: any): string | undefined {
-        const [type, token] = request.headers.authorization?.split(' ') ?? [];
-        return type === 'Bearer' ? token : undefined;
-    }
-
     async validateRefreshToken(accessToken: string) {
-        console.clear();
-
         var payload = await this.jwtService.decode(accessToken);
         var user_id = payload.sub;
 
@@ -130,7 +125,6 @@ export class AuthService {
                 ignoreExpiration: true
             });
         } catch (error) {
-            console.error('invalid AT');
             throw new UnauthorizedException();
         }
 
@@ -147,7 +141,7 @@ export class AuthService {
             await this.tokensRepository.updateTokens(user_id, refreshToken);
             return { access_token: accessToken };
         } catch (e) {
-            console.error('RT expired');
+            // console.error('RT expired');
             throw new UnauthorizedException();
         }
     }

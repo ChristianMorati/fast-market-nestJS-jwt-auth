@@ -16,7 +16,12 @@ export class ProductController {
     }
 
     @Get('/code/:code')
-    findOne(@Param() params: any): Promise<Product | undefined> {
+    findOneByCode(@Param() params: any): Promise<Product | undefined> {
         return this.productService.findOneByCode(params.code)
+    }
+
+    @Get('/:id')
+    findOne(@Param() params: any): Promise<Product | undefined> {
+        return this.productService.findOne(params.id)
     }
 }

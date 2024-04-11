@@ -15,4 +15,8 @@ export class ProductService {
     async findOneByCode(code: string): Promise<Product | undefined> {
         return await this.productsRepository.findOneBycode(code);
     }
+
+    async findOne(id: number): Promise<Product | undefined> {
+        return await this.productsRepository.findOne(id);
+    }
 }

@@ -1,11 +1,8 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { Public } from 'src/auth/guard/auth-guard';
 import { PurchaseService } from '../service/purchase.service';
-import z from "zod";
-import { Purchase } from '../entity/purchase.entity';
-import { User } from 'src/user/entity/user.entity';
-import { PurchaseItem } from '../entity/purchase-items.entity';
 import { Response } from 'express';
+import z from "zod";
 
 type allPurchasesDTO = {
     userId: number
@@ -21,11 +18,8 @@ export class PurchaseController {
         private purchaseService: PurchaseService
     ) { }
 
-    @Public()
     @Get('/all/:userId')
     findAll(@Param() params: allPurchasesDTO) {
-
-        console.log(params);
 
         const purchaseIdParam = z.object({
             userId: z.string()
@@ -39,7 +33,6 @@ export class PurchaseController {
         }
     }
 
-    @Public()
     @Get('/last/:userId')
     lastPurchase(@Param() params: lastPurchaseDTO) {
         const { userId } = params

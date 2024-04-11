@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-
 export type Intent = {
     amount: number,
 }
