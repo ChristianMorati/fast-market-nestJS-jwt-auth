@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PurchaseRepository } from 'src/repositories/purchase.repository';
-import { User } from 'src/user/entity/user.entity';
+import { PartialType } from '@nestjs/swagger';
+import { Product } from 'src/products/entity/product.entity';
 import { Purchase } from '../entity/purchase.entity';
 import { PurchaseItem } from '../entity/purchase-items.entity';
-import { UsersRepository } from 'src/repositories/users.repository';
-import { Product } from 'src/products/entity/product.entity';
-import { AppDataSource } from 'src/data_source/data-source';
-import { PartialType } from '@nestjs/swagger';
+import { PurchaseRepository } from 'src/repositories/purchase.repository';
+import { User } from 'src/user/entity/user.entity';
+import { UsersRepository } from 'src/user/user.repository';
 
 @Injectable()
 export class PurchaseService {
@@ -24,7 +23,8 @@ export class PurchaseService {
     }
 
     async createPurchase(order: any) {
-
+        /* 
+        
         const queryRunner = AppDataSource.createQueryRunner()
         await queryRunner.connect()
         await queryRunner.startTransaction()
@@ -67,5 +67,6 @@ export class PurchaseService {
         } finally {
             await queryRunner.release();
         }
+        */
     }
 }

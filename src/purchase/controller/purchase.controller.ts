@@ -1,5 +1,4 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
-import { Public } from 'src/auth/guard/auth-guard';
 import { PurchaseService } from '../service/purchase.service';
 import { Response } from 'express';
 import z from "zod";
@@ -39,7 +38,6 @@ export class PurchaseController {
         return this.purchaseService.lastPurchase(userId);
     }
 
-    @Public()
     @Post('/create')
     async createOrder(@Body() order: any, @Res() res: Response) {
         const purchase = await this.purchaseService.createPurchase(order)

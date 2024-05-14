@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Token } from '../entity/token.entity';
 import { TokensRepository } from 'src/repositories/tokens.repository';
 import { User } from 'src/user/entity/user.entity';
-import { UsersRepository } from 'src/repositories/users.repository';
+import { UsersRepository } from 'src/user/user.repository';
 import { jwtConstants } from '../constants';
 
 @Injectable()
@@ -24,7 +24,10 @@ export class AuthService {
     async signin(username: string, userPassword: string): Promise<Object> {
         const user = await this.usersRepository.findOneByUsername(username);
 
-        if (!user || !await this.compareHashPassword(userPassword, user.password)) {
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        if (!await this.compareHashPassword(userPassword, user.password)) {
             throw new UnauthorizedException();
         }
 

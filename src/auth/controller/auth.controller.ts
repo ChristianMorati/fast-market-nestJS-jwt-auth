@@ -1,11 +1,9 @@
-import { Body, Controller, HttpStatus, Post, Put, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Put, Res, UnauthorizedException } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthDto } from '../dto/auth.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { AuthService } from '../service/auth.service';
-import { Public } from '../guard/auth-guard';
-
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -14,7 +12,6 @@ export class AuthController {
         private authService: AuthService,
     ) { }
 
-    @Public()
     @Post('signin')
     signIn(@Body() authDto: AuthDto) {
         const AT = this.authService.signin(
@@ -24,13 +21,11 @@ export class AuthController {
         return AT;
     }
 
-    @Public()
     @Post('signup')
     signUp(@Body() createUserDto: CreateUserDto) {
         return this.authService.signUp(createUserDto);
     }
 
-    @Public()
     @Put('refresh')
     async refresh(@Body() body: any, @Res() res: Response) {
         var newAcessToken;

@@ -1,7 +1,3 @@
-import { APP_GUARD } from '@nestjs/core';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthGuard } from './auth/guard/auth-guard';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
@@ -19,29 +15,23 @@ import { UsersModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.HOST,
-      port: parseInt(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      entities: [User, Token, Product, Purchase, PurchaseItem],
-      synchronize: true,
-    }),
-    UsersModule,
-    AuthModule,
-    ProductsModule,
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: process.env.HOST,
+    //   port: parseInt(process.env.DB_PORT),
+    //   username: process.env.DB_USER,
+    //   password: process.env.DB_PASS,
+    //   database: process.env.DB_NAME,
+    //   entities: [User, Token, Product, Purchase, PurchaseItem],
+    //   synchronize: true,
+    // }),
+    // UsersModule,
+    // AuthModule,
+    // ProductsModule,
+    // PurchaseModule,
     PaymentModule,
-    PurchaseModule,
   ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-  },
-  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule { }
