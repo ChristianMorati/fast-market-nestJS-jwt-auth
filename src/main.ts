@@ -9,7 +9,7 @@ async function bootstrap() {
 
   const swagger_config = new DocumentBuilder()
     .setTitle('Users Auth')
-    .setDescription('The cats API description')
+    .setDescription('The fm API description')
     .setVersion('1.0')
     // .addTag('cats')
     .build();
