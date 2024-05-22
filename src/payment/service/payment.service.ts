@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { UsersRepository } from 'src/user/user.repository';
 
 export type IntentOptions = {
     amount: number,
